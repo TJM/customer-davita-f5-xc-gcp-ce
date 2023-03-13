@@ -82,4 +82,4 @@ module "gcp_ce" {
 output "ce" {
   value = module.gcp_ce.ce
 }
-````# customer-davita-f5-xc-gcp-ce
+````
