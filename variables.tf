@@ -102,8 +102,8 @@ variable "machine_image" {
     },
     us = {
       ingress_gateway        = "centos7-atomic-20220721105-single-voltmesh-us"
-      # ingress_egress_gateway = "centos7-atomic-20220721105-multi-voltmesh-us"
-      ingress_egress_gateway = "centos7-atomic-20220721105-multi-voltmesh-davita-from-public"
+      ingress_egress_gateway = "centos7-atomic-20220721105-multi-voltmesh-us"
+      # ingress_egress_gateway = "centos7-atomic-20220721105-multi-voltmesh-davita-from-public"
 
     },
     eu = {
