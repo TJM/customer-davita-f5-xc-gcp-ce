@@ -29,6 +29,13 @@ module "vpc_sli" {
   delete_default_internet_gateway_routes = true
 }
 
+resource "google_compute_address" "nat" {
+  count   = 1
+  name    = "${module.vpc_slo.network_name}-${var.gcp_region}-nat-${count.index}"
+  project = var.gcp_project_id
+  region  = var.gcp_region
+}
+
 module "nat" {
   source                             = "terraform-google-modules/cloud-nat/google"
   version                            = "~> 2.0"
@@ -38,8 +45,8 @@ module "nat" {
   create_router                      = true
   name                               = "${var.project_prefix}-${var.project_name}-nat-config-${var.gcp_region}-${var.project_suffix}"
   source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
-  # nat_ip_allocate_option             = "MANUAL_ONLY" # "AUTO_ONLY"
-  # nat_ips                            = google_compute_address.nat.*.self_link
+  nat_ip_allocate_option             = "MANUAL_ONLY" # "AUTO_ONLY"
+  nat_ips                            = google_compute_address.nat.*.self_link
   network                            = module.vpc_slo.network_name
 }
 
