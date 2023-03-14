@@ -39,7 +39,7 @@ module "nat" {
   name                               = "${var.project_prefix}-${var.project_name}-nat-config-${var.gcp_region}-${var.project_suffix}"
   source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
   # nat_ip_allocate_option             = "MANUAL_ONLY" # "AUTO_ONLY"
-  # nat_ips                            = google_compute_address.nat.*.self_link # List of self_links of external IPs
+  # nat_ips                            = google_compute_address.nat.*.self_link
   network                            = module.vpc_slo.network_name
 }
 

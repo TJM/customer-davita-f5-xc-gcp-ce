@@ -12,7 +12,7 @@ variable "project_suffix" {
 
 variable "project_name" {
   type    = string
-  default = "gcp-ce"
+  default = "davita-gcp-ce"
 }
 
 variable "f5xc_tenant" {
