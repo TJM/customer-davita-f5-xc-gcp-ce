@@ -7,7 +7,7 @@ variable "project_prefix" {
 variable "project_suffix" {
   type        = string
   description = "prefix string put at the end of string"
-  default     = "02"
+  default     = "03"
 }
 
 variable "project_name" {
@@ -80,52 +80,21 @@ variable "fabric_subnet_inside" {
   default = "192.168.0.128/25"
 }
 
-variable "machine_image" {
-  type = object({
-    asia = object({
-      ingress_gateway        = string
-      ingress_egress_gateway = string
-    }),
-    us = object({
-      ingress_gateway        = string
-      ingress_egress_gateway = string
-    }),
-    eu = object({
-      ingress_gateway        = string
-      ingress_egress_gateway = string
-    })
-  })
-  default = {
-    asia = {
-      ingress_gateway        = "centos7-atomic-20220721105-single-voltmesh-asia"
-      ingress_egress_gateway = "centos7-atomic-20220721105-multi-voltmesh-asia"
-    },
-    us = {
-      ingress_gateway        = "centos7-atomic-20220721105-single-voltmesh-us"
-      # ingress_egress_gateway = "centos7-atomic-20220721105-multi-voltmesh-us"
-      ingress_egress_gateway = "centos7-atomic-20220721105-multi-voltmesh-davita-01"
-
-    },
-    eu = {
-      ingress_gateway        = "centos7-atomic-20220721105-single-voltmesh-eu"
-      ingress_egress_gateway = "centos7-atomic-20220721105-multi-voltmesh-eu"
-    }
-  }
+variable "machine_image_name" {
+  type    = string
+  default = "centos7-atomic-20220721105-multi-voltmesh-davita"
 }
 
-/*variable "machine_image" {
+variable "machine_image_base" {
   type = object({
     ingress_gateway        = string
     ingress_egress_gateway = string
   })
   default = {
     ingress_gateway        = "centos7-atomic-20220721105-single-voltmesh"
-    # ingress_egress_gateway = "centos7-atomic-20220721105-multi-voltmesh-davita"
-    # ingress_egress_gateway = "centos7-atomic-20220721105-multi-voltmesh-davita-from-public"
-    ingress_egress_gateway = "centos7-atomic-20220721105-multi-voltmesh-davita-from-s-team"
-    # ingress_egress_gateway = "centos7-atomic-202010061048-multi-voltmesh-davita"
+    ingress_egress_gateway = "centos7-atomic-20220721105-multi-voltmesh"
   }
-}*/
+}
 
 variable "machine_type" {
   type    = string
@@ -135,6 +104,11 @@ variable "machine_type" {
 variable "machine_disk_size" {
   type    = string
   default = "40"
+}
+
+variable "machine_image_family" {
+  type    = string
+  default = "centos7-atomic"
 }
 
 variable "f5xc_ce_gateway_type" {
@@ -158,8 +132,14 @@ variable "f5xc_fleet_label" {
   default = "gcp-ce-test"
 }
 
+variable "f5xc_ves_images_base_url" {
+  type    = string
+  default = "https://storage.googleapis.com/ves-images"
+}
+
 locals {
-  cluster_labels = var.f5xc_fleet_label != "" ? { "ves.io/fleet" = var.f5xc_fleet_label } : {}
+  cluster_labels  = var.f5xc_fleet_label != "" ? { "ves.io/fleet" = var.f5xc_fleet_label } : {}
+  f5xc_image_name = format("%s-%s", var.machine_image_name, var.project_suffix)
 }
 
 provider "google" {

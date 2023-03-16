@@ -1,3 +1,16 @@
+resource "google_compute_image" "f5xc_ce" {
+  name    = local.f5xc_image_name
+  project = var.gcp_project_id
+  family  = var.machine_image_family
+
+  guest_os_features {
+    type = "MULTI_IP_SUBNET"
+  }
+  raw_disk {
+    source = format("%s/%s.tar.gz", var.f5xc_ves_images_base_url, var.machine_image_base[var.f5xc_ce_gateway_type])
+  }
+}
+
 module "vpc_slo" {
   source       = "terraform-google-modules/network/google"
   mtu          = 1460
@@ -58,7 +71,8 @@ module "gcp_secure_ce_multi_nic_existing_vpc" {
   machine_type             = var.machine_type
   ssh_username             = "centos"
   has_public_ip            = false
-  machine_image            = var.machine_image["us"][var.f5xc_ce_gateway_type]
+  # machine_image            = var.machine_image_base[var.f5xc_ce_gateway_type]
+  machine_image            = google_compute_image.f5xc_ce.name
   instance_name            = format("%s-%s-%s", var.project_prefix, var.project_name, var.project_suffix)
   ssh_public_key           = file(var.ssh_public_key_file)
   machine_disk_size        = var.machine_disk_size
